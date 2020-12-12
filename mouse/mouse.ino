@@ -22,9 +22,9 @@ int8_t dir = 1;
 void setup() {
   Serial.begin(115200);
   Consumer.begin();
-  pinMode(previous, INPUT_PULLUP);
-  pinMode(play, INPUT_PULLUP);
-  pinMode(next, INPUT_PULLUP);
+  pinMode(previous, INPUT);
+  pinMode(play, INPUT);
+  pinMode(next, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
@@ -100,12 +100,12 @@ void mouseLoop() {
     for (uint8_t i = 0; i <= 20; i++) {
       deltay = random(-5, 5);
       height += deltay;
-      if (height > 20) {
-        deltay = -5;
+      if (height > 10) {
+        deltay = -10;
         height += deltay;
       }
-      else if (height < -20) {
-        deltay = 5;
+      else if (height < -10) {
+        deltay = 10;
         height += deltay;
       }
       Mouse.move(-i * dir, deltay, 0);
