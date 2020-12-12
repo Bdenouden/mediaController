@@ -8,11 +8,9 @@ const uint8_t next = 10;
 
 // debounce and timer initiated
 const uint8_t debounce_time = 20;
-uint8_t debounce;  // debounce functions as 8 bits to store 8 individual boolean values
 uint32_t timer0 = 0;
 uint32_t timer1 = 0;
 uint32_t timer2 = 0;
-uint32_t curTime;
 
 bool playBtnPressed = false;
 
@@ -30,6 +28,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
+  Serial.println("Setup complete");
 }
 
 void loop() {
@@ -47,6 +46,18 @@ void loop() {
       timer2 = millis();
     }
   }
+
+    // check next button
+  if (!digitalRead(next)) {
+    if (millis() - timer0 > debounce_time) { // pull-up button -> digitalread = FALSE if pressed
+      Consumer.write(MEDIA_NEXT);
+      timer0 = millis();
+      Serial.println("Next pressed - OK");
+    } else {
+      timer0 = millis();
+    }
+  }
+  
 
   // check play/pause button
   if (!digitalRead(play)) {
@@ -112,12 +123,13 @@ bool checkPlayBtnPressed()
   if (!digitalRead(play)) {
     if (millis() - timer1 >= debounce_time) {
       inMouseLoop = false;
+      playBtnPressed = false;
       Serial.println("Exiting mouse loop");
       switchLoopTimer = 0;
       timer1 = millis();
       return inMouseLoop;
-
-    } else {
+    } 
+    else {
       timer1 = millis();
     }
   }
